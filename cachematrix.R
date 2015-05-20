@@ -13,7 +13,7 @@
 makeCacheMatrix <- function(x = matrix()) {
         ## initialize object Inv to store the inverse
         Inv <- NULL
-        ## change the x to newX and reset the inverse to NULL
+        ## change the x to newX with x$setMat(newX) and reset the inverse to NULL
         setMat <- function(newX = matrix()){
                 x <<- newX
                 Inv <<- NULL
@@ -38,14 +38,19 @@ makeCacheMatrix <- function(x = matrix()) {
 
 
 ## Seeks in the cache of the "special" matrix object created with makeCacheMatrix for a stored inverse
-## matrix (Inv). If Inv is NULL, computes the inverse and stores it in Inv. Outputs the inverse (Inv). 
+## matrix (Inv). If Inv is NULL, computes the inverse and stores it in Inv. Outputs the inverse (Inv).
+## NB The argument x in input is the "special" matrix object created with the function makeCacheMatrix,
+## it is not the matrix x given as input argument to makeCacheMatrix.
 
 cacheSolve <- function(x, ...) {
+        ## retrieves the object Inv from the cache
         Inv <- x$getInv()
+        ## check if Inv contains something. If yes, retrieve it, send a message and exit the function
         if(!is.null(Inv)){
                 print("Getting cached inverse")
                 return(Inv)
         }
+        ## if Inv was NULL, retrieve the data, calculate the inverse and store it in Inv and the cache
         data <- x$getMat()
         Inv <-solve(data)
         x$setInv(Inv)
